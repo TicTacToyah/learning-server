@@ -1,33 +1,66 @@
 const express = require('express')
-const { addTotal } = require('./utils')
+const uid = require('uid')
 const app = express()
 
+app.use(express.json()) //
+
 const data = {
-  users: [
-    { name: 'Dejan', amount: 3 },
-    { name: 'Jerry', amount: 30 },
-    { name: 'Jan', amount: 0 },
-  ],
+  cards: [{
+      title: 'htlm',
+      content: 'lorem',
+      tags: ['new topic'],
+      id: uid()
+    },
+    {
+      title: 'css',
+      content: 'lorem',
+      tags: ['new topic'],
+      id: uid()
+    },
+    {
+      title: 'js',
+      content: 'lorem',
+      tags: ['new topic'],
+      id: uid()
+    }
+  ]
 }
 
-app.use(express.static('public'))
-app.use(express.json())
-
-app.post('/coffee', (req, res) => {
-  const newUser = req.body
-  const isNameEqual = user => user.name === newUser.name
-  const user = data.users.find(isNameEqual)
-  if (user) {
-    user.amount += newUser.amount
-  } else {
-    data.users.push(newUser)
-  }
-
-  res.json(addTotal(data))
+app.get('/cards', (req, res) => {
+  res.json(data)
 })
 
-app.get('/coffee', (req, res) => {
-  res.json(addTotal(data))
+app.post('/cards', (req, res) => {
+  const newCard = req.body
+  //const isTitleEqual = card => card.title === newCard.title
+  newCard.id = uid()
+  data.cards.push(newCard)
+  res.json(newCard)
+  /*const card = data.cards.find(isTitleEqual)
+  if (card) {
+    card.amount += newCard.amount
+  } else {
+    data.cards.push({
+      ...newCard,
+      id
+    })
+  }
+
+*/
+})
+
+app.delete('/cards/:id', (req, res) => {
+  const id = (res.params, id)
+  const index = data.cards.find(card => card.id === id)
+  const deletedCard = data.cards[index]
+  data.cards.splice(index, 1)
+  //const deletedCard = data.cards.find(card=> card.id ===id)
+  // data.cards = data.cards.filter(card => card.id !== id)s
+  res.json(deletedCard)
+})
+
+app.put('/cards/:id', (req, res) => {
+
 })
 
 app.listen(process.env.PORT || 3000, () => {
