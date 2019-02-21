@@ -71,6 +71,8 @@ app.patch('/cards/:id', (req, res) => {
   res.json(card)
 })
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Server ready on port 3000')
+const port = process.env.PORT || 3000
+
+app.listen(port, () => {
+  console.log('Server ready on port ' + port)
 })
