@@ -32,35 +32,43 @@ app.get('/cards', (req, res) => {
 
 app.post('/cards', (req, res) => {
   const newCard = req.body
-  //const isTitleEqual = card => card.title === newCard.title
   newCard.id = uid()
   data.cards.push(newCard)
   res.json(newCard)
-  /*const card = data.cards.find(isTitleEqual)
-  if (card) {
-    card.amount += newCard.amount
-  } else {
-    data.cards.push({
-      ...newCard,
-      id
-    })
-  }
 
-*/
 })
 
 app.delete('/cards/:id', (req, res) => {
   const id = (res.params, id)
-  const index = data.cards.find(card => card.id === id)
-  const deletedCard = data.cards[index]
-  data.cards.splice(index, 1)
-  //const deletedCard = data.cards.find(card=> card.id ===id)
-  // data.cards = data.cards.filter(card => card.id !== id)s
+  //const index = data.cards.find(card => card.id === id)
+  //const deletedCard = data.cards[index]
+  //data.cards.splice(index, 1)
+  const deletedCard = data.cards.find(card => card.id === id)
+  data.cards = data.cards.filter(card => card.id !== id)
   res.json(deletedCard)
 })
 
 app.put('/cards/:id', (req, res) => {
+  const id = req.params.id
+  const index = data.cards.findIndex(card => card.id === id)
+  const card = {
+    ...req.body,
+    id: uid()
+  }
+  data.cards[index] = card
+  res.json(card)
 
+})
+
+app.patch('/cards/:id', (req, res) => {
+  const id = req.params.id
+  const index = data.cards.findIndex(card => card.id === id)
+  const card = {
+    ...data.cards[index],
+    ...req.body
+  }
+  data.cards[index] = card
+  res.json(card)
 })
 
 app.listen(process.env.PORT || 3000, () => {
